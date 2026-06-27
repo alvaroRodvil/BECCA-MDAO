@@ -1,0 +1,359 @@
+
+%%% Preamble Requirements %%%
+% \usepackage{geometry}
+% \usepackage{amsfonts}
+% \usepackage{amsmath}
+% \usepackage{amssymb}
+% \usepackage{tikz}
+
+% Optional packages such as sfmath set through python interface
+% \usepackage{sfmath}
+
+% \usetikzlibrary{arrows,chains,positioning,scopes,shapes.geometric,shapes.misc,shadows}
+
+%%% End Preamble Requirements %%%
+
+\input{"/Users/alvaro/Desktop/University/MDAO-UCAV/mdao-ucav-v4/venv/lib/python3.11/site-packages/pyxdsm/diagram_styles"}
+\begin{tikzpicture}
+
+\matrix[MatrixSetup]{
+%Row 0
+&
+\node [DataIO] (output_opt) {$\begin{array}{c}x^{(0)} \\ \text{DVs init}\end{array}$};&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\\
+%Row 1
+\node [DataIO] (left_output_opt) {$x^*\;\text{(DVs óptimos)}$};&
+\node [Optimization] (opt) {$\text{Optimizer}$};&
+&
+\node [DataInter] (opt-geom) {$\begin{array}{c}\text{wing\_area} \\ \text{AR, taper, }v_{HT}\end{array}$};&
+\node [DataInter] (opt-prop) {$t_{sl}$};&
+\node [DataInter] (opt-aero) {$\begin{array}{c}\text{wing\_area} \\ \text{AR, taper}\end{array}$};&
+&
+\node [DataInter] (opt-weight) {$\begin{array}{c}\text{wing\_area} \\ \text{AR, taper}\end{array}$};&
+&
+\node [DataInter] (opt-perf) {$\begin{array}{c}\text{wing\_area} \\ t_{sl} \\ \text{AR, taper}\end{array}$};&
+\node [DataInter] (opt-stab) {$\begin{array}{c}\text{wing\_area} \\ \text{AR, taper, }v_{HT} \\ x_w,\,f_{ff},\,x_{ff},\,x_{pl}\end{array}$};&
+\node [DataInter] (opt-cost) {$t_{sl}$};&
+\node [DataInter] (opt-fvol) {$f_{ff}$};&
+&
+\\
+%Row 2
+&
+&
+\node [MDA] (mda) {$\begin{array}{c}\text{MDA} \\ \text{NonlinearBGS}\end{array}$};&
+&
+&
+\node [DataInter] (mda-aero) {$\text{MTOW}^{(k)}$};&
+\node [DataInter] (mda-miss) {$\text{MTOW}^{(k)}$};&
+\node [DataInter] (mda-weight) {$\text{MTOW}^{(k)}$};&
+&
+&
+&
+&
+&
+&
+\\
+%Row 3
+&
+\node [DataInter] (geom-opt) {$g_b$};&
+&
+\node [Function] (geom) {$\begin{array}{c}\text{Geometry}\end{array}$};&
+&
+\node [DataInter] (geom-aero) {$\begin{array}{c}\text{mac} \\ S_{vtail}\end{array}$};&
+&
+\node [DataInter] (geom-weight) {$S_{vtail}$};&
+&
+&
+\node [DataInter] (geom-stab) {$\begin{array}{c}\text{mac} \\ b\end{array}$};&
+&
+\node [DataInter] (geom-fvol) {$\begin{array}{c}V_{wing} \\ V_{fuse}\end{array}$};&
+&
+\\
+%Row 4
+&
+&
+&
+&
+\node [Function] (prop) {$\begin{array}{c}\text{Propulsion}\end{array}$};&
+&
+\node [DataInter] (prop-miss) {$\begin{array}{c}\text{tsfc} \\ T_{avail}\end{array}$};&
+&
+\node [DataInter] (prop-mtow) {$W_{eng}$};&
+\node [DataInter] (prop-perf) {$T_{avail,cr}$};&
+\node [DataInter] (prop-stab) {$W_{eng}$};&
+\node [DataInter] (prop-cost) {$W_{eng}$};&
+&
+&
+\\
+%Row 5
+&
+\node [DataInter] (aero-opt) {$g_{M_{dd}}$};&
+&
+&
+&
+\node [Function] (aero) {$\begin{array}{c}\text{Aerodynamics}\end{array}$};&
+\node [DataInter] (aero-miss) {$\begin{array}{c}L/D \\ (L/D)_{max}\end{array}$};&
+&
+&
+\node [DataInter] (aero-perf) {$\begin{array}{c}C_{D0} \\ e \\ L/D\end{array}$};&
+&
+&
+&
+&
+\\
+%Row 6
+&
+&
+&
+&
+&
+&
+\node [Function] (miss) {$\begin{array}{c}\text{Mission}\end{array}$};&
+&
+\node [DataInter] (miss-mtow) {$W_{fuel}$};&
+\node [DataInter] (miss-perf) {$W_{fuel}$};&
+\node [DataInter] (miss-stab) {$W_{fuel}$};&
+&
+\node [DataInter] (miss-fvol) {$W_{fuel}$};&
+&
+\\
+%Row 7
+&
+&
+&
+&
+&
+&
+&
+\node [Function] (weight) {$\begin{array}{c}\text{Weights}\end{array}$};&
+\node [DataInter] (weight-mtow) {$W_{OEW}$};&
+&
+\node [DataInter] (weight-stab) {$\begin{array}{c}W_{fuse} \\ W_{wing} \\ W_{vtail} \\ W_{lg}\end{array}$};&
+\node [DataInter] (weight-cost) {$W_{OEW}$};&
+&
+&
+\\
+%Row 8
+&
+&
+\node [DataInter] (mtow-mda) {$\text{MTOW}^{(k+1)}$};&
+&
+&
+\node [DataInter] (mtow-aero) {$MTOW$};&
+\node [DataInter] (mtow-miss) {$MTOW$};&
+\node [DataInter] (mtow-weight) {$MTOW$};&
+\node [Function] (mtow) {$\begin{array}{c}\text{MTOW} \\ \text{Sum}\end{array}$};&
+\node [DataInter] (mtow-perf) {$MTOW$};&
+\node [DataInter] (mtow-stab) {$MTOW$};&
+&
+&
+&
+\node [DataIO] (right_output_mtow) {$MTOW^*$};\\
+%Row 9
+&
+\node [DataInter] (perf-opt) {$\begin{array}{c}g_{s_{TO}},\,g_{s_{land}} \\ g_{n_{turn}},\,g_{RoC} \\ g_{P_s},\,g_{stall},\,g_{cr}\end{array}$};&
+&
+&
+&
+&
+&
+&
+&
+\node [Function] (perf) {$\begin{array}{c}\text{Performance}\end{array}$};&
+&
+&
+&
+&
+\node [DataIO] (right_output_perf) {$\text{Perf. constraints}$};\\
+%Row 10
+&
+\node [DataInter] (stab-opt) {$\begin{array}{c}g_{SM_{full/empty/aft}} \\ g_{\delta CG},\,g_{pl} \\ g_{C_{n\beta}},\,g_{C_L^{tail}}\end{array}$};&
+&
+&
+&
+&
+&
+&
+&
+&
+\node [Function] (stab) {$\begin{array}{c}\text{Stability}\end{array}$};&
+&
+&
+&
+\node [DataIO] (right_output_stab) {$\text{Stab. constraints}$};\\
+%Row 11
+&
+\node [DataInter] (cost-opt) {$C_{ac}\;(\text{obj})$};&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\node [Function] (cost) {$\begin{array}{c}\text{Cost}\end{array}$};&
+&
+&
+\node [DataIO] (right_output_cost) {$C_{ac}^*$};\\
+%Row 12
+&
+\node [DataInter] (fvol-opt) {$\begin{array}{c}g_{V_w} \\ g_{V_f}\end{array}$};&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\node [Function] (fvol) {$\begin{array}{c}\text{Fuel} \\ \text{Volume}\end{array}$};&
+&
+\\
+%Row 13
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\\
+%Row 14
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+&
+\\
+};
+
+% XDSM process chains
+
+
+\begin{pgfonlayer}{data}
+\path
+% Horizontal edges
+(mda) edge [DataLine] (mda-aero)
+(mda) edge [DataLine] (mda-miss)
+(mda) edge [DataLine] (mda-weight)
+(mtow) edge [DataLine] (mtow-mda)
+(opt) edge [DataLine] (opt-geom)
+(opt) edge [DataLine] (opt-prop)
+(opt) edge [DataLine] (opt-aero)
+(opt) edge [DataLine] (opt-weight)
+(opt) edge [DataLine] (opt-perf)
+(opt) edge [DataLine] (opt-stab)
+(opt) edge [DataLine] (opt-cost)
+(opt) edge [DataLine] (opt-fvol)
+(geom) edge [DataLine] (geom-aero)
+(geom) edge [DataLine] (geom-weight)
+(geom) edge [DataLine] (geom-stab)
+(geom) edge [DataLine] (geom-fvol)
+(prop) edge [DataLine] (prop-miss)
+(prop) edge [DataLine] (prop-mtow)
+(prop) edge [DataLine] (prop-stab)
+(prop) edge [DataLine] (prop-cost)
+(prop) edge [DataLine] (prop-perf)
+(aero) edge [DataLine] (aero-miss)
+(aero) edge [DataLine] (aero-perf)
+(miss) edge [DataLine] (miss-mtow)
+(miss) edge [DataLine] (miss-stab)
+(miss) edge [DataLine] (miss-perf)
+(miss) edge [DataLine] (miss-fvol)
+(weight) edge [DataLine] (weight-mtow)
+(weight) edge [DataLine] (weight-stab)
+(weight) edge [DataLine] (weight-cost)
+(mtow) edge [DataLine] (mtow-aero)
+(mtow) edge [DataLine] (mtow-miss)
+(mtow) edge [DataLine] (mtow-weight)
+(mtow) edge [DataLine] (mtow-perf)
+(mtow) edge [DataLine] (mtow-stab)
+(cost) edge [DataLine] (cost-opt)
+(perf) edge [DataLine] (perf-opt)
+(stab) edge [DataLine] (stab-opt)
+(aero) edge [DataLine] (aero-opt)
+(geom) edge [DataLine] (geom-opt)
+(fvol) edge [DataLine] (fvol-opt)
+(opt) edge [DataLine] (left_output_opt)
+(mtow) edge [DataLine] (right_output_mtow)
+(perf) edge [DataLine] (right_output_perf)
+(stab) edge [DataLine] (right_output_stab)
+(cost) edge [DataLine] (right_output_cost)
+% Vertical edges
+(mda-aero) edge [DataLine] (aero)
+(mda-miss) edge [DataLine] (miss)
+(mda-weight) edge [DataLine] (weight)
+(mtow-mda) edge [DataLine] (mda)
+(opt-geom) edge [DataLine] (geom)
+(opt-prop) edge [DataLine] (prop)
+(opt-aero) edge [DataLine] (aero)
+(opt-weight) edge [DataLine] (weight)
+(opt-perf) edge [DataLine] (perf)
+(opt-stab) edge [DataLine] (stab)
+(opt-cost) edge [DataLine] (cost)
+(opt-fvol) edge [DataLine] (fvol)
+(geom-aero) edge [DataLine] (aero)
+(geom-weight) edge [DataLine] (weight)
+(geom-stab) edge [DataLine] (stab)
+(geom-fvol) edge [DataLine] (fvol)
+(prop-miss) edge [DataLine] (miss)
+(prop-mtow) edge [DataLine] (mtow)
+(prop-stab) edge [DataLine] (stab)
+(prop-cost) edge [DataLine] (cost)
+(prop-perf) edge [DataLine] (perf)
+(aero-miss) edge [DataLine] (miss)
+(aero-perf) edge [DataLine] (perf)
+(miss-mtow) edge [DataLine] (mtow)
+(miss-stab) edge [DataLine] (stab)
+(miss-perf) edge [DataLine] (perf)
+(miss-fvol) edge [DataLine] (fvol)
+(weight-mtow) edge [DataLine] (mtow)
+(weight-stab) edge [DataLine] (stab)
+(weight-cost) edge [DataLine] (cost)
+(mtow-aero) edge [DataLine] (aero)
+(mtow-miss) edge [DataLine] (miss)
+(mtow-weight) edge [DataLine] (weight)
+(mtow-perf) edge [DataLine] (perf)
+(mtow-stab) edge [DataLine] (stab)
+(cost-opt) edge [DataLine] (opt)
+(perf-opt) edge [DataLine] (opt)
+(stab-opt) edge [DataLine] (opt)
+(aero-opt) edge [DataLine] (opt)
+(geom-opt) edge [DataLine] (opt)
+(fvol-opt) edge [DataLine] (opt)
+(opt) edge [DataLine] (output_opt);
+\end{pgfonlayer}
+
+\end{tikzpicture}
